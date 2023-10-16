@@ -1,0 +1,72 @@
+package cliente;
+
+public class Cliente {
+	
+	private String nome;
+	private String documentoCpfCnpj;
+	private Integer numeroConta;
+	private String tipoConta;
+	private double saldo;
+	private String interesse;
+	
+	public Cliente(String nome, String documentoCpfCnpj, Integer numeroConta, String tipoConta, double saldo,
+			String interesse) {
+		super();
+		this.nome = nome;
+		this.documentoCpfCnpj = documentoCpfCnpj;
+		this.numeroConta = numeroConta;
+		this.tipoConta = tipoConta;
+		this.saldo = saldo;
+		this.interesse = interesse;
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "Cliente [nome=" + nome + ", documentoCpfCnpj=" + documentoCpfCnpj + ", numeroConta=" + numeroConta
+				+ ", tipoConta=" + tipoConta + ", saldo=" + saldo + ", interesse=" + interesse + "]";
+	}
+
+
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getDocumentoCpfCnpj() {
+		return documentoCpfCnpj;
+	}
+	public void setDocumentoCpfCnpj(String documentoCpfCnpj) {
+		this.documentoCpfCnpj = documentoCpfCnpj;
+	}
+	public Integer getNumeroConta() {
+		return numeroConta;
+	}
+	public void setNumeroConta(Integer numeroConta) {
+		this.numeroConta = numeroConta;
+	}
+	public String getTipoConta() {
+		return tipoConta;
+	}
+	public void setTipoConta(String tipoConta) {
+		this.tipoConta = tipoConta;
+	}
+	public double getSaldo() {
+		return saldo;
+	}
+	public void setSaldo(double saldo) {
+		this.saldo = saldo;
+	}
+	public String getInteresse() {
+		return interesse;
+	}
+	public void setInteresse(String interesse) {
+		this.interesse = interesse;
+	}
+	
+	
+	
+	
+
+}

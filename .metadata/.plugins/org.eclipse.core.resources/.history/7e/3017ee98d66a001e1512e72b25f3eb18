@@ -1,0 +1,158 @@
+package aplicacao;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import arvores.ArvoreJuridico;
+import arvores.Arvores;
+import cliente.Cliente;
+
+public class DivulgaOfertas {
+	/*
+	 * NOMES E RM dos alunos que compõem o grupo
+	 */
+	public static void main(String[] args) {
+		Scanner le = new Scanner(System.in);
+		Arvores abb = new Arvores();
+		ArvoreJuridico abbJ = new ArvoreJuridico();
+		/*
+		 * Cria a uma árvore de busca binária para cada tipo de conta (pessoa física ou
+		 * jurídica) FEITOOO
+		 */
+		int opcao, op, numeroConta;
+		String nome, cpfCnpj;
+		String tipoConta = null;
+		double saldo;
+		do {
+			System.out.println(" 0 - Encerrar o programa");
+			System.out.println(" 1 - Inscrição cliente");
+			System.out.println(" 2 - Oferta de novo serviço e/ou aplicação");
+			System.out.println(" 3 – Entrar no Submenu ");
+			opcao = le.nextInt();
+			switch (opcao) {
+			case 1:
+				System.out.print("Digite nome: ");
+				nome = le.next();
+				System.out.print("Digite cpf: ");
+				cpfCnpj = le.next();
+				System.out.print("Digite número da conta: ");
+				numeroConta = le.nextInt();
+				do {
+					System.out.print("Digite 1- Pessoa Física 2- PessoaJurídica: ");
+					op = le.nextInt();
+					switch (op) {
+					case 1:
+						tipoConta = "Física";
+						break;
+					case 2:
+						tipoConta = "Jurídica";
+						break;
+					default:
+						System.out.println("Opção inválida ");
+						op = -1;
+					}
+				} while (op == -1);
+				System.out.print("Informe saldo em aplicações R$: ");
+				saldo = le.nextDouble();
+				/*
+				 * Intancia um objeto da classe Cliente e insere na ABB correspondente a tipo de
+				 * conta FEITOOO
+				 */
+				
+				Cliente cliente = new Cliente(nome, cpfCnpj, numeroConta, tipoConta, saldo);
+				if(tipoConta.equals("Jurídica")) {
+					abbJ.inserir(null, cliente);
+				}else{
+					abb.inserir(null, cliente);
+				}
+				
+				break;
+			case 2:
+				System.out.print("Qual tipo de conta a oferta se destina? ");
+				do {
+					System.out.print("Digite 1- Pessoa Física 2-Pessoa Jurídica: ");
+					op = le.nextInt();
+					switch (op) {
+					case 1:
+						tipoConta = "Física";
+						break;
+					case 2:
+						tipoConta = "Jurídica";
+						break;
+					default:
+						System.out.println("Opção inválida ");
+						op = -1;
+					}
+				} while (op == -1);
+				System.out.print("Qual o valor de saldo mínimo exigido:R$ ");
+				saldo = le.nextDouble();
+				
+				/*
+				 * Fazendo uso de um método da classe ABB, desenvolvido para este problema, uma
+				 * lista de clientes aptos para a oferta é gerada. Nesse trecho de programa que
+				 * tentar fazer o contato com todos os clientes presente na lista.
+				 */
+				
+				break;
+			case 3:
+				do {
+		            System.out.println("Menu de Consulta:");
+		            System.out.println("1) Consultar cliente por CPF ou CNPJ");
+		            System.out.println("2) Atualizar saldo do cliente por número da conta");
+		            System.out.println("3) Apresentar quantidade de clientes na ABB");
+		            System.out.println("4) Apresentar quantidade de clientes com saldo acima de um valor");
+		            System.out.println("5) Voltar ao Menu Principal");
+
+		            System.out.print("Escolha uma opção: ");
+		            opcao = le.nextInt();
+
+		            switch (opcao) {
+		                case 1:
+		                	 System.out.print("Digite o número do documento: ");
+		 		            String documento = le.next();
+		 		            Cliente clientes = null;
+		 		            
+		                    abbJ.contaConsultaDocumento(abbJ.root, documento, clientes);
+		                    abb.contaConsultaDocumento(abb.root, documento, clientes);
+		                    break;
+		                case 2:
+		                	System.out.println("Digite o numero da conat que você deseja acessar:");
+		                	int numeroDaConta = le.nextInt();
+		                	System.out.println("Digite o novo valor da conta");
+		                	double novoSaldo = le.nextDouble();
+		                    abb.atualizarSaldoPorNumeroDaConta(null, numeroDaConta, novoSaldo);
+		                    abbJ.atualizarSaldoPorNumeroDaConta(null, numeroDaConta, novoSaldo);
+		                    break;
+		                case 3:
+		                	int cont =0;
+		                	  abbJ.contaNos(abbJ.root, cont);
+			                   abb.contaNos(abb.root, cont);
+		                    break;
+		                case 4:
+		                	System.out.println("Digite o valor minimo: ");
+		                	double valor = le.nextDouble();
+		                    abb.contaClientesComSaldoAcimaDeValor(null, valor);
+		                    break;
+		                case 5:
+		                    System.out.println("Voltando ao Menu Principal.");
+		                    break;
+		                default:
+		                    System.out.println("Opção inválida. Tente novamente.");
+		            }
+		       } while (opcao != 5);
+		    }
+				break;
+			
+		} while (opcao != 0);
+
+		System.out.println("Clientes que não aceitaram ou não estavam adequados para a oferta");
+		/*
+		 * Esvazia as ABBs apresentando todos os clientes que aguardam nova portunidade
+		 */
+		abb.esvaziarABB(null);
+		le.close();
+	}
+
+}
+	

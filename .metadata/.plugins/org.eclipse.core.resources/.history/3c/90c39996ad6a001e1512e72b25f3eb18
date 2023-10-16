@@ -1,0 +1,158 @@
+package arvores;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import arvores.ArvoreJuridico.ARVORE;
+import cliente.Cliente;
+
+public class Arvores {
+
+	private class ARVORE {
+		Cliente cliente;
+		ARVORE esq, dir;
+	}
+
+	public ARVORE root = null;
+
+	public ARVORE inserir(ARVORE p, Cliente cliente) {
+		if (p == null) {
+			p = new ARVORE();
+			p.cliente = cliente;
+			p.esq = null;
+			p.dir = null;
+		} else if (cliente.getnumeroConta() < p.cliente.getnumeroConta()) {
+			p.esq = inserir(p.esq, cliente);
+		} else {
+			p.dir = inserir(p.dir, cliente);
+		}
+		return p;
+	}
+	
+	
+	
+	
+	
+	
+	
+
+	public boolean consulta(ARVORE p, int numeroConta) {
+		if (p == null) {
+			return false;
+		} else {
+			if (numeroConta == p.cliente.getnumeroConta()) {
+				return true;
+			} else {
+				if (numeroConta < p.cliente.getnumeroConta()) {
+					return consulta(p.esq, numeroConta);
+				} else {
+					return consulta(p.dir, numeroConta);
+				}
+			}
+		}
+	}
+
+	
+	
+	
+	
+	
+	public int contaConsulta(ARVORE p, int numeroConta, int cont) {
+		if (p != null) {
+			cont++;
+			if (numeroConta == p.cliente.getnumeroConta()) {
+				return cont;
+			} else {
+				if (numeroConta < p.cliente.getnumeroConta()) {
+					cont = contaConsulta(p.esq, numeroConta, cont);
+				} else {
+					cont = contaConsulta(p.dir, numeroConta, cont);
+				}
+			}
+		}
+		return cont;
+	}
+	
+	
+	
+	
+	
+	
+	
+
+	public Cliente contaConsultaDocumento(ARVORE p, String cpfCnpj, Cliente foundCliente) {
+	    if (p != null) {
+	        int comparisonResult = cpfCnpj.compareTo(p.cliente.getDocumentoCpfCnpj());
+	        if (comparisonResult == 0) {
+	            // O CPF/CNPJ corresponde, retornar o cliente
+	            foundCliente = p.cliente;
+	        } else if (comparisonResult < 0) {
+	            // CPF/CNPJ é menor, procurar à esquerda
+	            foundCliente = contaConsultaDocumento(p.esq, cpfCnpj, foundCliente);
+	        } else {
+	            // CPF/CNPJ é maior, procurar à direita
+	            foundCliente = contaConsultaDocumento(p.dir, cpfCnpj, foundCliente);
+	        }
+	    }
+	    return foundCliente;
+	}
+
+	
+	
+	
+	
+	
+
+	public ARVORE removeValor(ARVORE p, int numeroConta) {
+		if (p != null) {
+			if (numeroConta == p.cliente.getnumeroConta()) {
+				if (p.esq == null && p.dir == null) {
+					return null;
+				}
+				if (p.esq == null) {
+					return p.dir;
+				} else if (p.dir == null) {
+					return p.esq;
+				} else {
+					ARVORE aux, ref;
+					ref = p.dir;
+					aux = p.dir;
+					while (aux.esq != null)
+						aux = aux.esq;
+					aux.esq = p.esq;
+					return ref;
+				}
+			} else {
+				if (numeroConta < p.cliente.getnumeroConta()) {
+					p.esq = removeValor(p.esq, numeroConta);
+				} else {
+					p.dir = removeValor(p.dir, numeroConta);
+				}
+			}
+		}
+		return p;
+	}
+
+	
+	
+	
+	
+	
+	
+	public int contaNos(ARVORE p, int cont) {
+		if (p != null) {
+			cont++;
+			cont = contaNos(p.esq, cont);
+			cont = contaNos(p.dir, cont);
+		}
+		return cont;
+	}
+
+	public void listaEmOrdem(ARVORE p) {
+		if (p != null) {
+			listaEmOrdem(p.esq);
+			System.out.print(" " + p.cliente.getnumeroConta());
+			listaEmOrdem(p.dir);
+		}
+	}
+}

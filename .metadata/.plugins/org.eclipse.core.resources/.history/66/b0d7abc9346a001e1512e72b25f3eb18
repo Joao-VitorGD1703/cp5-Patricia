@@ -1,0 +1,46 @@
+package cliente;
+
+public class Cliente {
+	
+	private String nome;
+	private String documentoCpfCnpj;
+	private String tipoConta;
+	private double saldo;
+	
+	public Cliente(String nome, String documentoCpfCnpj, String tipoConta, double saldo) {
+		super();
+		this.nome = nome;
+		this.documentoCpfCnpj = documentoCpfCnpj;
+		this.tipoConta = tipoConta;
+		this.saldo = saldo;
+	}
+	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getDocumentoCpfCnpj() {
+		return documentoCpfCnpj;
+	}
+	public void setDocumentoCpfCnpj(String documentoCpfCnpj) {
+		this.documentoCpfCnpj = documentoCpfCnpj;
+	}
+	public String getTipoConta() {
+		return tipoConta;
+	}
+	public void setTipoConta(String tipoConta) {
+		this.tipoConta = tipoConta;
+	}
+	public double getSaldo() {
+		return saldo;
+	}
+	public void setSaldo(double saldo) {
+		this.saldo = saldo;
+	}
+	
+	
+	
+
+}

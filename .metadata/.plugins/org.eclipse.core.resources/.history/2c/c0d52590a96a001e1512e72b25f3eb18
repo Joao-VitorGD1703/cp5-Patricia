@@ -1,0 +1,11 @@
+package cliente;
+
+public class ClienteJuridico {
+	
+	private String nome;
+	private String cnpj;
+	private Integer numeroConta;
+	private String tipoConta;
+	private double saldo;
+
+}

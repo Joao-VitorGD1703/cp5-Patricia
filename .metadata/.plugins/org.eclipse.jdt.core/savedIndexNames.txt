@@ -1,0 +1,4 @@
+INDEX VERSION 1.134+C:\Users\joão\Desktop\projetos\java\assunto11_ABB\.metadata\.plugins\org.eclipse.jdt.core
+31277264.index
+3478525882.index
+1865797976.index

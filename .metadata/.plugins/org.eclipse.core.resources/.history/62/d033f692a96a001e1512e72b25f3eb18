@@ -1,0 +1,11 @@
+package cliente;
+
+public class ClienteFisico {
+
+	private String nome;
+	private String cpf;
+	private Integer numeroConta;
+	private String tipoConta;
+	private double saldo;
+
+}

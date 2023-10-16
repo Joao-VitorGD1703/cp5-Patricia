@@ -1,0 +1,497 @@
+package arvores;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cliente.Cliente;
+
+public class Arvores {
+
+	private class ARVORE {
+		Cliente cliente;
+		ARVORE esq, dir;
+	}
+
+	public ARVORE root = null;
+
+	public ARVORE inserir(ARVORE p, Cliente cliente) {
+		if (p == null) {
+			p = new ARVORE();
+			p.cliente = cliente;
+			p.esq = null;
+			p.dir = null;
+		} else if (cliente.getnumeroConta() < p.cliente.getnumeroConta()) {
+			p.esq = inserir(p.esq, cliente);
+		} else {
+			p.dir = inserir(p.dir, cliente);
+		}
+		return p;
+	}
+	
+	
+	
+	
+	
+	
+	
+
+	public boolean consulta(ARVORE p, int numeroConta) {
+		if (p == null) {
+			return false;
+		} else {
+			if (numeroConta == p.cliente.getnumeroConta()) {
+				return true;
+			} else {
+				if (numeroConta < p.cliente.getnumeroConta()) {
+					return consulta(p.esq, numeroConta);
+				} else {
+					return consulta(p.dir, numeroConta);
+				}
+			}
+		}
+	}
+	
+	public boolean atualizarSaldoPorNumeroDaConta(ARVORE p, int numeroConta, double novoSaldo) {
+	    if (p == null) {
+	        return false; 
+	    }
+
+	   
+	    if (numeroConta == p.cliente.getnumeroConta()) {
+	        p.cliente.setSaldo(novoSaldo); 
+	        return true; 
+	    } else if (numeroConta < p.cliente.getnumeroConta()) {
+	    
+	        return atualizarSaldoPorNumeroDaConta(p.esq, numeroConta, novoSaldo);
+	    } else {
+	       
+	        return atualizarSaldoPorNumeroDaConta(p.dir, numeroConta, novoSaldo);
+	    }
+	}
+
+
+	
+	public int contaClientesComSaldoAcimaDeValor(ARVORE p, double valorMinimo) {
+	    // Caso base: se a árvore está vazia, não há clientes
+	    if (p == null) {
+	        return 0;
+	    }
+
+	    // Inicializa o contador
+	    int cont = 0;
+
+	    // Verifica o saldo do cliente atual
+	    double saldoCliente = p.cliente.getSaldo();
+
+	    // Se o saldo do cliente atual atender ao critério, incrementa o contador
+	    if (saldoCliente > valorMinimo) {
+	        cont++;
+	    }
+
+	    // Recursivamente verifica os ramos esquerdo e direito
+	    int contEsq = contaClientesComSaldoAcimaDeValor(p.esq, valorMinimo);
+	    int contDir = contaClientesComSaldoAcimaDeValor(p.dir, valorMinimo);
+
+	    // Soma o contador dos ramos esquerdo e direito ao contador atual
+	    cont += contEsq + contDir;
+
+	    return cont;
+	}
+
+	
+	
+	
+	
+	
+	public int contaConsulta(ARVORE p, int numeroConta, int cont) {
+		if (p != null) {
+			cont++;
+			if (numeroConta == p.cliente.getnumeroConta()) {
+				return cont;
+			} else {
+				if (numeroConta < p.cliente.getnumeroConta()) {
+					cont = contaConsulta(p.esq, numeroConta, cont);
+				} else {
+					cont = contaConsulta(p.dir, numeroConta, cont);
+				}
+			}
+		}
+		return cont;
+	}
+	
+	
+	
+	
+	
+	
+	
+
+	public Cliente contaConsultaDocumento(ARVORE p, String cpfCnpj, Cliente foundCliente) {
+	    if (p != null) {
+	        int comparisonResult = cpfCnpj.compareTo(p.cliente.getDocumentoCpfCnpj());
+	        if (comparisonResult == 0) {
+	            foundCliente = p.cliente;
+	        } else if (comparisonResult < 0) {
+	            foundCliente = contaConsultaDocumento(p.esq, cpfCnpj, foundCliente);
+	        } else {
+	            foundCliente = contaConsultaDocumento(p.dir, cpfCnpj, foundCliente);
+	        }
+	    }
+	    return foundCliente;
+	}
+
+	
+	
+	
+	
+	
+
+	public ARVORE removeValor(ARVORE p, int numeroConta) {
+		if (p != null) {
+			if (numeroConta == p.cliente.getnumeroConta()) {
+				if (p.esq == null && p.dir == null) {
+					return null;
+				}
+				if (p.esq == null) {
+					return p.dir;
+				} else if (p.dir == null) {
+					return p.esq;
+				} else {
+					ARVORE aux, ref;
+					ref = p.dir;
+					aux = p.dir;
+					while (aux.esq != null)
+						aux = aux.esq;
+					aux.esq = p.esq;
+					return ref;
+				}
+			} else {
+				if (numeroConta < p.cliente.getnumeroConta()) {
+					p.esq = removeValor(p.esq, numeroConta);
+				} else {
+					p.dir = removeValor(p.dir, numeroConta);
+				}
+			}
+		}
+		return p;
+	}
+
+	
+	
+	
+	
+	
+	
+	public int contaNos(ARVORE p, int cont) {
+		if (p != null) {
+			cont++;
+			cont = contaNos(p.esq, cont);
+			cont = contaNos(p.dir, cont);
+		}
+		return cont;
+	}
+
+	public void listaEmOrdem(ARVORE p) {
+		if (p != null) {
+			listaEmOrdem(p.esq);
+			System.out.print(" " + p.cliente.getnumeroConta());
+			listaEmOrdem(p.dir);
+		}
+	}
+	
+	
+	
+	
+
+	
+	
+	 public List<Cliente> filtrarClientesComSaldoMaiorOuIgual(double valorMinimo) {
+	        List<Cliente> clientesFiltrados = new ArrayList<>();
+	        filtrarClientesComSaldoMaiorOuIgual(root, valorMinimo, clientesFiltrados);
+	        return clientesFiltrados;
+	    }
+
+	    private void filtrarClientesComSaldoMaiorOuIgual(ARVORE p, double valorMinimo, List<Cliente> clientesFiltrados) {
+	        if (p != null) {
+	            filtrarClientesComSaldoMaiorOuIgual(p.esq, valorMinimo, clientesFiltrados);
+	            if (p.cliente.getSaldo() >= valorMinimo) {
+	                clientesFiltrados.add(p.cliente);
+	            }
+	            filtrarClientesComSaldoMaiorOuIgual(p.dir, valorMinimo, clientesFiltrados);
+	        }
+	    }
+	}
+	Neste exemplo, a função filtrarClientesComSaldoMaiorOuIgual percorre a árvore e adiciona os clientes que atendem ao critério na lista clientesFiltrados. O método filtrarClientesComSaldoMaiorOuIgual é chamado na função pública filtrarClientesComSaldoMaiorOuIgual para iniciar o processo de filtragem.
+
+	Você pode chamar o método filtrarClientesComSaldoMaiorOuIgual na sua aplicação para obter uma lista de clientes que possuem saldo maior ou igual ao valor mínimo. Certifique-se de utilizar a instância correta da árvore (por exemplo, abb.root ou abbJ.root) para realizar a filtragem.
+
+
+
+
+	User
+	Oferta de novo serviço e/ou aplicação: é usada para ler do teclado o saldo mínimo necessário
+	para a oferta a ser feita e qual tipo de cliente (pessoa física ou jurídica). Em seguida, o
+	programa deve percorrer a ABB do tipo de conta exigida pela oferta a fim de buscar todos os
+	clientes que se adequem a oferta, gerando uma lista com os clientes que devem ser
+	contactados (seus registros) em ordem decrescente de saldo em aplicações
+	(obrigatoriamente a ordem deve ser gerada pelo percurso da ABB e não por ordenação
+	posterior da lista).
+	Com a lista de clientes aptos para receber a oferta pronta o programa deve:
+	I. Retirar o registro do cliente com maior saldo da lista gerada para que o setor de
+	divulgação entre em contato com o cliente e este pode aceitar ou não a oferta do banco.
+	Assim, se o cliente:
+	• Aceitar a oferta, o programa deve apresentar uma mensagem na tela de saída para
+	avisar este fato. Em seguida, o registro do cliente deve ser retirado também da ABB,
+	uma vez que apenas 1 oferta deve ser feita para cada cliente em um determinado
+	período de tempo.
+	• Não aceitar a oferta, o programa deve apresentar uma mensagem na tela de saída
+	para avisar a recusa por parte do cliente e o registro do cliente permanece na ABB.
+	II. Programa prossegue retirando o próximo cliente da lista que deve ser contactado, até
+	esvaziar a lista.
+	ChatGPT
+	Entendi que você deseja criar um programa que ofereça um novo serviço ou aplicação a clientes com base em um saldo mínimo e no tipo de cliente (pessoa física ou jurídica). O programa deve seguir os seguintes passos:
+
+	Solicitar o saldo mínimo e o tipo de cliente (pessoa física ou jurídica) do usuário.
+
+	Percorrer a árvore binária de busca (ABB) do tipo de conta correspondente à oferta para buscar todos os clientes que atendem aos critérios (saldo maior ou igual ao saldo mínimo).
+
+	Gerar uma lista com os clientes aptos para receber a oferta, ordenados em ordem decrescente de saldo (a ordenação deve ser feita durante o percurso da ABB).
+
+	Prosseguir com a oferta, retirando o cliente com o maior saldo da lista. Você pode apresentar uma mensagem ao cliente e aguardar sua resposta. Se o cliente aceitar a oferta, remova o registro do cliente da ABB. Se ele recusar, o registro do cliente permanece na ABB.
+
+	Repetir o processo para o próximo cliente da lista até que a lista esteja vazia.
+
+	Aqui está um exemplo de como você pode implementar o código em Java:
+
+	java
+	Copy code
+	import java.util.ArrayList;
+	import java.util.List;
+
+	public class OfertaService {
+	    public void oferecerServico(ABB abb, double saldoMinimo, String tipoCliente) {
+	        List<Cliente> clientesAptos = new ArrayList<>();
+	        percorrerABB(abb.root, saldoMinimo, tipoCliente, clientesAptos);
+
+	        while (!clientesAptos.isEmpty()) {
+	            Cliente cliente = obterClienteComMaiorSaldo(clientesAptos);
+	            apresentarOfertaETratarResposta(cliente, abb);
+	        }
+	    }
+
+	    private void percorrerABB(ARVORE p, double saldoMinimo, String tipoCliente, List<Cliente> clientesAptos) {
+	        if (p != null) {
+	            percorrerABB(p.esq, saldoMinimo, tipoCliente, clientesAptos);
+	            if (p.cliente.getSaldo() >= saldoMinimo && p.cliente.getTipoConta().equals(tipoCliente)) {
+	                clientesAptos.add(p.cliente);
+	            }
+	            percorrerABB(p.dir, saldoMinimo, tipoCliente, clientesAptos);
+	        }
+	    }
+
+	    private Cliente obterClienteComMaiorSaldo(List<Cliente> clientesAptos) {
+	        Cliente clienteComMaiorSaldo = null;
+	        double maiorSaldo = -1;
+
+	        for (Cliente cliente : clientesAptos) {
+	            if (cliente.getSaldo() > maiorSaldo) {
+	                maiorSaldo = cliente.getSaldo();
+	                clienteComMaiorSaldo = cliente;
+	            }
+	        }
+
+	        clientesAptos.remove(clienteComMaiorSaldo);
+	        return clienteComMaiorSaldo;
+	    }
+
+	    private void apresentarOfertaETratarResposta(Cliente cliente, ABB abb) {
+	        System.out.println("Oferecendo serviço ao cliente: " + cliente.getNome());
+	        // Apresente a oferta e aguarde a resposta do cliente (aceitar ou recusar).
+	        // Implemente a lógica para tratar a resposta.
+	        
+	        if (clienteAceitouOferta()) {
+	            System.out.println("Cliente aceitou a oferta.");
+	            abb.removerCliente(cliente); // Remova o cliente da ABB.
+	        } else {
+	            System.out.println("Cliente recusou a oferta.");
+	        }
+	    }
+
+	    private boolean clienteAceitouOferta() {
+	        // Implemente a lógica para verificar se o cliente aceitou a oferta.
+	        return true; // Neste exemplo, consideramos que o cliente sempre aceita.
+	    }
+	}
+	Este é um exemplo simplificado que mostra como você pode implementar a lógica de oferta de serviços aos clientes com base em critérios de saldo mínimo e tipo de cliente. Você precisará ajustar a lógica de apresentação da oferta e tratamento da resposta de acordo com suas necessidades específicas.
+
+
+
+
+	User
+	Oferta de novo serviço e/ou aplicação: é usada para ler do teclado o saldo mínimo necessário
+	para a oferta a ser feita e qual tipo de cliente (pessoa física ou jurídica). Em seguida, o
+	programa deve percorrer a ABB do tipo de conta exigida pela oferta a fim de buscar todos os
+	clientes que se adequem a oferta, gerando uma lista com os clientes que devem ser
+	contactados (seus registros) em ordem decrescente de saldo em aplicações
+	(obrigatoriamente a ordem deve ser gerada pelo percurso da ABB e não por ordenação
+	posterior da lista).
+	Com a lista de clientes aptos para receber a oferta pronta o programa deve:
+	I. Retirar o registro do cliente com maior saldo da lista gerada para que o setor de
+	divulgação entre em contato com o cliente e este pode aceitar ou não a oferta do banco.
+	Assim, se o cliente:
+	• Aceitar a oferta, o programa deve apresentar uma mensagem na tela de saída para
+	avisar este fato. Em seguida, o registro do cliente deve ser retirado também da ABB,
+	uma vez que apenas 1 oferta deve ser feita para cada cliente em um determinado
+	período de tempo.
+	• Não aceitar a oferta, o programa deve apresentar uma mensagem na tela de saída
+	para avisar a recusa por parte do cliente e o registro do cliente permanece na ABB.
+	II. Programa prossegue retirando o próximo cliente da lista que deve ser contactado, até
+	esvaziar a lista.
+	ChatGPT
+	Entendi que você deseja criar um programa que ofereça um novo serviço ou aplicação a clientes com base em um saldo mínimo e no tipo de cliente (pessoa física ou jurídica). O programa deve seguir os seguintes passos:
+
+	Solicitar o saldo mínimo e o tipo de cliente (pessoa física ou jurídica) do usuário.
+
+	Percorrer a árvore binária de busca (ABB) do tipo de conta correspondente à oferta para buscar todos os clientes que atendem aos critérios (saldo maior ou igual ao saldo mínimo).
+
+	Gerar uma lista com os clientes aptos para receber a oferta, ordenados em ordem decrescente de saldo (a ordenação deve ser feita durante o percurso da ABB).
+
+	Prosseguir com a oferta, retirando o cliente com o maior saldo da lista. Você pode apresentar uma mensagem ao cliente e aguardar sua resposta. Se o cliente aceitar a oferta, remova o registro do cliente da ABB. Se ele recusar, o registro do cliente permanece na ABB.
+
+	Repetir o processo para o próximo cliente da lista até que a lista esteja vazia.
+
+	Aqui está um exemplo de como você pode implementar o código em Java:
+
+	java
+	Copy code
+	import java.util.ArrayList;
+	import java.util.List;
+
+	public class OfertaService {
+	    public void oferecerServico(ABB abb, double saldoMinimo, String tipoCliente) {
+	        List<Cliente> clientesAptos = new ArrayList<>();
+	        percorrerABB(abb.root, saldoMinimo, tipoCliente, clientesAptos);
+
+	        while (!clientesAptos.isEmpty()) {
+	            Cliente cliente = obterClienteComMaiorSaldo(clientesAptos);
+	            apresentarOfertaETratarResposta(cliente, abb);
+	        }
+	    }
+
+	    private void percorrerABB(ARVORE p, double saldoMinimo, String tipoCliente, List<Cliente> clientesAptos) {
+	        if (p != null) {
+	            percorrerABB(p.esq, saldoMinimo, tipoCliente, clientesAptos);
+	            if (p.cliente.getSaldo() >= saldoMinimo && p.cliente.getTipoConta().equals(tipoCliente)) {
+	                clientesAptos.add(p.cliente);
+	            }
+	            percorrerABB(p.dir, saldoMinimo, tipoCliente, clientesAptos);
+	        }
+	    }
+
+	    private Cliente obterClienteComMaiorSaldo(List<Cliente> clientesAptos) {
+	        Cliente clienteComMaiorSaldo = null;
+	        double maiorSaldo = -1;
+
+	        for (Cliente cliente : clientesAptos) {
+	            if (cliente.getSaldo() > maiorSaldo) {
+	                maiorSaldo = cliente.getSaldo();
+	                clienteComMaiorSaldo = cliente;
+	            }
+	        }
+
+	        clientesAptos.remove(clienteComMaiorSaldo);
+	        return clienteComMaiorSaldo;
+	    }
+
+	    private void apresentarOfertaETratarResposta(Cliente cliente, ABB abb) {
+	        System.out.println("Oferecendo serviço ao cliente: " + cliente.getNome());
+	        // Apresente a oferta e aguarde a resposta do cliente (aceitar ou recusar).
+	        // Implemente a lógica para tratar a resposta.
+	        
+	        if (clienteAceitouOferta()) {
+	            System.out.println("Cliente aceitou a oferta.");
+	            abb.removerCliente(cliente); // Remova o cliente da ABB.
+	        } else {
+	            System.out.println("Cliente recusou a oferta.");
+	        }
+	    }
+
+	    private boolean clienteAceitouOferta() {
+	        // Implemente a lógica para verificar se o cliente aceitou a oferta.
+	        return true; // Neste exemplo, consideramos que o cliente sempre aceita.
+	    }
+	}
+	Este é um exemplo simplificado que mostra como você pode implementar a lógica de oferta de serviços aos clientes com base em critérios de saldo mínimo e tipo de cliente. Você precisará ajustar a lógica de apresentação da oferta e tratamento da resposta de acordo com suas necessidades específicas.
+
+
+
+
+
+
+	    public List<Cliente> encontrarClientesAptos(ABB abb, double saldoMinimo, String tipoCliente) {
+	        List<Cliente> clientesAptos = new ArrayList<>();
+	        percorrerABB(abb.root, saldoMinimo, tipoCliente, clientesAptos);
+	        return clientesAptos;
+	    }
+
+	    public void oferecerServicos(List<Cliente> clientesAptos, ABB abb) {
+	        while (!clientesAptos.isEmpty()) {
+	            Cliente cliente = obterClienteComMaiorSaldo(clientesAptos);
+	            boolean aceitouOferta = apresentarOfertaETratarResposta(cliente);
+	            
+	            if (aceitouOferta) {
+	                System.out.println("Cliente aceitou a oferta.");
+	                abb.removerCliente(cliente);
+	            } else {
+	                System.out.println("Cliente recusou a oferta.");
+	            }
+	        }
+	    }
+
+	    private void percorrerABB(ARVORE p, double saldoMinimo, String tipoCliente, List<Cliente> clientesAptos) {
+	        if (p != null) {
+	            percorrerABB(p.esq, saldoMinimo, tipoCliente, clientesAptos);
+	            if (p.cliente.getSaldo() >= saldoMinimo && p.cliente.getTipoConta().equals(tipoCliente)) {
+	                clientesAptos.add(p.cliente);
+	            }
+	            percorrerABB(p.dir, saldoMinimo, tipoCliente, clientesAptos);
+	        }
+	    }
+
+	    private Cliente obterClienteComMaiorSaldo(List<Cliente> clientesAptos) {
+	        Cliente clienteComMaiorSaldo = null;
+	        double maiorSaldo = -1;
+
+	        for (Cliente cliente : clientesAptos) {
+	            if (cliente.getSaldo() > maiorSaldo) {
+	                maiorSaldo = cliente.getSaldo();
+	                clienteComMaiorSaldo = cliente;
+	            }
+	        }
+
+	        clientesAptos.remove(clienteComMaiorSaldo);
+	        return clienteComMaiorSaldo;
+	    }
+
+	    private boolean apresentarOfertaETratarResposta(Cliente cliente) {
+	        System.out.println("Oferecendo serviço ao cliente: " + cliente.getNome());
+	        // Apresente a oferta e aguarde a resposta do cliente (aceitar ou recusar).
+	        // Implemente a lógica para tratar a resposta.
+	        
+	        return clienteAceitouOferta(); // Implemente a lógica para verificar se o cliente aceitou a oferta.
+	    }
+
+	    private boolean clienteAceitouOferta() {
+	        // Implemente a lógica para verificar se o cliente aceitou a oferta.
+	        return true; // Neste exemplo, consideramos que o cliente sempre aceita.
+	    }
+	}
+	}
+
+
+
+
+
+	
+
+}
